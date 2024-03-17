@@ -1,7 +1,8 @@
 
-def filterDocs(anulado, data):
+#state E:emitido, A:anulado
+def filterDocs(state, data):
     elements=[]
     for element in data:
-        if element['anulado'] == anulado:
+        if element['estado'] == state:
             elements.append(element)
     return elements
