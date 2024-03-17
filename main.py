@@ -1,6 +1,7 @@
 import json
 from src.ApiRequest import getRequest
 from src.FilterDocs import filterDocs
+from src.Drivin_Guides import createGuite, deleteGuite
 
 # open api_data json
 with open('api_data.json', 'r') as data_json:
@@ -15,6 +16,8 @@ documentsPerDate = getRequest(
     data['contifico']['token'])
 
 nulled_documents = filterDocs("A", documentsPerDate)
-
 new_documents = filterDocs("E", documentsPerDate)
+
+createGuite(new_documents)
+deleteGuite(nulled_documents)
 
