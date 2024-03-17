@@ -1,23 +1,8 @@
 import datetime
-import requests
 import json
+from src.ApiRequest import getRequest
+from src.FilterDocs import filterDocs
 
-def getRequest(path, endpoint, query, token):
-
-    #authorization
-    headers = { 'Authorization': token }
-
-    #execution query
-    response = requests.request("GET", path+endpoint+query, headers=headers, data={})
-
-    #response validation
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return [{"error": "Status code "+str(response.status_code)}]
-
-# ----------------------------------------------------------------------------------------------------- START POINT
-    
 # open api_data json
 with open('api_data.json', 'r') as data_json:
     # load data as object
@@ -28,8 +13,7 @@ date_now = datetime.datetime.now()
 
 # Formatear la fecha y hora actual en "dd/mm/Y"
 date = date_now.strftime("%d/%m/%Y")
-      
-#date = "24/01/2022" #date burned
+date = "24/01/2022" #date burned
 
 #call request and sotre in var
 documentsPerDate = getRequest(
@@ -38,4 +22,6 @@ documentsPerDate = getRequest(
     data['contifico']['endpoints']['document_per_date']['query']+date,
     data['contifico']['token'])
 
-print(documentsPerDate) #TODO: code to sync
+nulled_documents = filterDocs(True, documentsPerDate)
+
+new_documents = filterDocs(False, documentsPerDate)
