@@ -1,8 +1,14 @@
-def createGuite(guides):
+from src.ApiRequest import delGuide, creGuide, getDrivId
+
+def createGuide(guides):
     print("Number of new guides is: "+str(len(guides)))
-    #TODO: create guides (post guides array in driv.in)
+    for guide in guides:
+        creGuide(guide)
+        
 
-
-def deleteGuite(guides):
+def deleteGuide(guides):
     print("Number of Nulled guides is: "+str(len(guides)))
-    #TODO: delete guides (delete guides array in driv.in)
+    for guide in guides:
+        driv_id = getDrivId(guide['numero_documento'])
+        delGuide(driv_id)
+        

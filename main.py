@@ -1,7 +1,7 @@
 import json
 from src.ApiRequest import getRequest
 from src.FilterDocs import filterDocs
-from src.Drivin_Guides import createGuite, deleteGuite
+from src.Drivin_Guides import createGuide, deleteGuide
 
 # open api_data json
 with open('api_data.json', 'r') as data_json:
@@ -18,6 +18,6 @@ documentsPerDate = getRequest(
 nulled_documents = filterDocs("A", documentsPerDate)
 new_documents = filterDocs("E", documentsPerDate)
 
-createGuite(new_documents)
-deleteGuite(nulled_documents)
+createGuide(new_documents)
+deleteGuide(nulled_documents)
 
