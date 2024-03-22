@@ -1,5 +1,5 @@
 import json
-from src.ApiRequest import getRequest
+from ApiRequest import getRequest
 from src.FilterDocs import filterDocs
 from src.Drivin_Guides import createGuide, deleteGuide
 
@@ -18,6 +18,6 @@ documentsPerDate = getRequest(
 nulled_documents = filterDocs("A", documentsPerDate)
 new_documents = filterDocs("E", documentsPerDate)
 
-createGuide(new_documents)
+#createGuide(new_documents)
 deleteGuide(nulled_documents)
 
