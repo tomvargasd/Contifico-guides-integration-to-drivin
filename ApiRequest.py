@@ -1,5 +1,7 @@
 import json
-import requests
+import urllib3
+
+http = urllib3.PoolManager()
 
 def getjsondata():
     with open('api_data.json', 'r') as data_json:
@@ -10,15 +12,15 @@ def getRequest(path, endpoint, query, token):
 
     #authorization
     headers = { 'Authorization': token }
-
+    print(path+endpoint+query)
     #execution query
-    response = requests.request("GET", path+endpoint+query, headers=headers, data={})
+    response = http.request("GET", path+endpoint+query, headers=headers)
 
     #response validation
-    if response.status_code == 200:
-        return response.json()
+    if response.status == 200:
+        return json.loads(response.data)
     else:
-        return [{"error": "Status code "+str(response.status_code)}]
+        return [{"error": "Status code "+str(response.status)}]
 
 
 def getDrivId(id):
@@ -30,12 +32,12 @@ def getDrivId(id):
     'Content-Type': 'application/json'
     }
 
-    response = requests.request("DELETE", url, headers=headers, data={})
+    response = http.request("DELETE", url, headers=headers, body={})
 
-    if response.status_code == 200:
-        return response.json()
+    if response.status == 200:
+        return json.loads(response.data)
     else:
-        return "Error getting guide... \n"+str(response.json())
+        return "Error getting guide... \n"+str(json.loads(response.data))
 
 def delGuide(id):
     print("deleting guide...")
@@ -47,14 +49,13 @@ def delGuide(id):
         'X-API-Key': params['drivin']['api_key'],
         'Content-Type': 'application/json'
         }
-        response = requests.request("DELETE", url, headers=headers, data={})
+        response = http.request("DELETE", url, headers=headers, body={})
 
-        if response.status_code == 200:
-            return response.json()
-        else:
-            return "Error deleting guide... \n"+str(response.json())
+        return json.loads(response.data)
     else:
-        return "Error deleting guide... \n"+"no guide found."
+        return {
+            'success': False
+        }
 
 def creGuide(guide):
     print("creating guide...")
@@ -118,16 +119,15 @@ def creGuide(guide):
     'Content-Type': 'application/json'
     }
 
-    response = requests.request("POST", url, headers=headers, data=payload)
+    response = http.request("POST", url, headers=headers, body=payload)
 
     print("creating Drivin guide...")
-    if response.status_code == 200:
-        print(response.json())
-        print()
+    if response.status == 200:
+        print(json.loads(response.data))
     else:
-        print("error creating drivin guide: Err "+str(response.status_code))
+        print("error creating drivin guide: Err "+str(response.status))
 
-    return response.json()
+    return json.loads(response.data)
 
     
 def getContificoProducts(products):
@@ -138,8 +138,8 @@ def getContificoProducts(products):
         headers = {
         'Authorization': data['contifico']['token']
         }
-        response = requests.request("GET", url, headers=headers, data={})
-        prod.append(response.json())
+        response = http.request("GET", url, headers=headers, body={})
+        prod.append(json.loads(response.data))
     print("geting product info...")
     print(prod)
     print()
@@ -153,11 +153,11 @@ def getContificoClient(id):
     headers = {
     'Authorization': data['contifico']['token']
     }
-    response = requests.request("GET", url, headers=headers, data={})
-    if response.status_code == 200:
+    response = http.request("GET", url, headers=headers, body={})
+    if response.status == 200:
         print("geting client info...")
-        print(response.json())
+        print(json.loads(response.data))
         print()
-        return response.json()
+        return json.loads(response.data)
     else:
         return "error"
